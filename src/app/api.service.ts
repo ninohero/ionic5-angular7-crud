@@ -1,3 +1,4 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
@@ -16,15 +17,21 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  private handleError<T> (operation = 'operation', result?: T)  {
+  private handleError<T>(operation = 'operation', result?: T)  {
     return (error: any): Observable<T> => {
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log to console instead
 
-    // TODO: send the error to remote logging infrastructure
-    console.error(error); // log to console instead
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
+    };
+  }
 
-    // Let the app keep running by returning an empty result.
-    return of(result as T)
-    }
+  getProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(apiUrl).pipe(
+      tap(heroes => console.log('fetched products')),
+      catchError(this.handleError('getProducts', []))
+    );
   }
 
   getProduct(id): Observable<Product> {
