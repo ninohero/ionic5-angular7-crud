@@ -53,7 +53,7 @@ export class ApiService {
   deleteProduct (id): Observable<Product> {
     const url = `${apiUrl}/${id}`;
 
-    return this.http.delete<Product>9url, httpOptions).pipe(
+    return this.http.delete<Product>(url, httpOptions).pipe(
       tap(_ => console.log(`deleted product id=${id}`)),
       catchError(this.handleError<Product>('deleteProduct'))
     );
